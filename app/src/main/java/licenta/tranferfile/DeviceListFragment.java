@@ -66,7 +66,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 return "Unavailable";
             default:
                 return "Unknown";
-
         }
     }
 
@@ -86,19 +85,16 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 
         private List<WifiP2pDevice> items;
 
-        public WiFiPeerListAdapter(Context context, int textViewResourceId,
-                                   List<WifiP2pDevice> objects) {
+        public WiFiPeerListAdapter(Context context, int textViewResourceId, List<WifiP2pDevice> objects) {
             super(context, textViewResourceId, objects);
             items = objects;
-
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
             if (v == null) {
-                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(
-                        Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.row_devices, null);
             }
             WifiP2pDevice device = items.get(position);
@@ -112,9 +108,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                     bottom.setText(getDeviceStatus(device.status));
                 }
             }
-
             return v;
-
         }
     }
 
@@ -142,7 +136,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         if (peers.size() == 0) {
             Log.d(WiFiDirectActivity.TAG, "No devices found");
         }
-
     }
 
     public void clearPeers() {
