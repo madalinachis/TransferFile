@@ -40,6 +40,10 @@ public class FileTransferService extends IntentService {
         super(name);
     }
 
+    public FileTransferService() {
+        super("FileTransferService");
+    }
+
     @Override
     public void onCreate() {
         // TODO Auto-generated method stub
@@ -65,9 +69,8 @@ public class FileTransferService extends IntentService {
             try {
                 Log.d(WiFiDirectActivity.TAG, "Opening client socket - ");
                 socket.bind(null);
-                if (host != null) {
-                    socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
-                }
+                socket.connect((new InetSocketAddress(host, port)), SOCKET_TIMEOUT);
+
                 Log.d(WiFiDirectActivity.TAG, "Client socket - " + socket.isConnected());
                 OutputStream stream = socket.getOutputStream();
                 ContentResolver cr = context.getContentResolver();
@@ -76,12 +79,12 @@ public class FileTransferService extends IntentService {
                 /*
                  * Object that is used to send file name with extension and recieved on other side.
                  */
-                Long FileLength = null;
-                if (filelength != null) {
-                    FileLength = Long.parseLong(filelength);
-                }
-                WiFiTransferModal transObj;
+                Long FileLength = Long.parseLong(filelength);
+                WiFiTransferModal transObj = null;
                 ObjectOutputStream oos = new ObjectOutputStream(stream);
+                if(transObj == null) transObj = new WiFiTransferModal();
+
+
                 transObj = new WiFiTransferModal(extension,FileLength);
                 oos.writeObject(transObj);
 
@@ -99,19 +102,24 @@ public class FileTransferService extends IntentService {
                 mHandler.post(new Runnable() {
 
                     public void run() {
+                        // TODO Auto-generated method stub
                         Toast.makeText(FileTransferService.this, "Paired Device is not Ready to receive the file", Toast.LENGTH_LONG).show();
                     }
                 });
                 DeviceDetailFragment.DismissProgressDialog();
             } finally {
-                if (socket.isConnected()) {
-                    try {
-                        socket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                if (socket != null) {
+                    if (socket.isConnected()) {
+                        try {
+                            socket.close();
+                        } catch (IOException e) {
+                            // Give up
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+
         }
     }
 }
